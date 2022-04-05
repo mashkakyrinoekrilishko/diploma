@@ -19,7 +19,7 @@ struct material
 
 struct element
 {
-   vector<int> num; //локальные узлы
+   vector<int> num; //Р»РѕРєР°Р»СЊРЅС‹Рµ СѓР·Р»С‹
    int mater;
 };
 
@@ -29,12 +29,12 @@ struct layer {
    unsigned int n_mat;
 };
 
-vector<node> nodes;         // все узлы в порядке глобальной нумерации
-vector<element> elems;      // все элементы в прядке глобальной нумерации
-vector<material> materials; // все материалы по индексам
-vector<vector<int>> KR1;    // KR1[i][j] на j-ом узле заданы i-ые краевые 1 рода
-vector<layer> layers;       //слои в среде
-vector<pair<int, vector<int>>>KR2_z; // граница параллельна z на j-ом узле заданы краевые 2 рода
+vector<node> nodes;         // РІСЃРµ СѓР·Р»С‹ РІ РїРѕСЂСЏРґРєРµ РіР»РѕР±Р°Р»СЊРЅРѕР№ РЅСѓРјРµСЂР°С†РёРё
+vector<element> elems;      // РІСЃРµ СЌР»РµРјРµРЅС‚С‹ РІ РїСЂСЏРґРєРµ РіР»РѕР±Р°Р»СЊРЅРѕР№ РЅСѓРјРµСЂР°С†РёРё
+vector<material> materials; // РІСЃРµ РјР°С‚РµСЂРёР°Р»С‹ РїРѕ РёРЅРґРµРєСЃР°Рј
+vector<vector<int>> KR1;    // KR1[i][j] РЅР° j-РѕРј СѓР·Р»Рµ Р·Р°РґР°РЅС‹ i-С‹Рµ РєСЂР°РµРІС‹Рµ 1 СЂРѕРґР°
+vector<layer> layers;       //СЃР»РѕРё РІ СЃСЂРµРґРµ
+vector<pair<int, vector<int>>>KR2_z; // РіСЂР°РЅРёС†Р° РїР°СЂР°Р»Р»РµР»СЊРЅР° z РЅР° j-РѕРј СѓР·Р»Рµ Р·Р°РґР°РЅС‹ РєСЂР°РµРІС‹Рµ 2 СЂРѕРґР°
 
 class KURS
 {
@@ -42,32 +42,32 @@ public:
    vector<double> di, al, au, b_loc, b, time, M2, M1, temp, p, z, r, x0, x1, x2, Ar, y, L, D, U;
    vector<int> ja, ia;
    vector<vector<double>> A_loc, G_loc, M_loc, M_loc_g;
-   vector<double> ax, ay; //узлы областей до разбиения
-   set <double> x_s, y_s; //границы КЭ
+   vector<double> ax, ay; //СѓР·Р»С‹ РѕР±Р»Р°СЃС‚РµР№ РґРѕ СЂР°Р·Р±РёРµРЅРёСЏ
+   set <double> x_s, y_s; //РіСЂР°РЅРёС†С‹ РљР­
    int N, Kel, time_number, istoc, nxw, nyw, n_layers, maxIter = 10000, iter = 0;
    double eps = 1E-15, normR = 0, normB, hr, hz, rp, lambda, zs, t0, t1, t2, nu0, nu1, nu2, istoc_r, istoc_z;
 
-   double gamma(double r); //гамма 
-   double f(double r, double z, double t); //правая часть
-   double f_KR1(double r, double z, int s1_id, double t); //правая часть для перых краевых
-   double f_KR2(double r, double z); //правая части для вторых краевых
+   double gamma(double r); //РіР°РјРјР° 
+   double f(double r, double z, double t); //РїСЂР°РІР°СЏ С‡Р°СЃС‚СЊ
+   double f_KR1(double r, double z, int s1_id, double t); //РїСЂР°РІР°СЏ С‡Р°СЃС‚СЊ РґР»СЏ РїРµСЂС‹С… РєСЂР°РµРІС‹С…
+   double f_KR2(double r, double z); //РїСЂР°РІР°СЏ С‡Р°СЃС‚Рё РґР»СЏ РІС‚РѕСЂС‹С… РєСЂР°РµРІС‹С…
    double u(double r, double z, double t);
-   void Input(); //считывание всех необходимых данных
-   void Generate_Net(string net_file); //генерация сетки и конечных элементов
-   void Read_Layers(string obj_file); //формируем слоистую среду
-   void Get_G(); //получение локальной матрицы G
-   void Get_M();//получение локальных матриц M
-   void Get_b(double t); // получение локального b
-   void Locals(int el_id, double t); // получение локальной матрицы А
-   void Assemble_Locals(int el_id); // внесение локальных в глобальную СЛАУ
-   void Nonlinear(); //цикл по времени
-   void Get_KR1(double t); // учет первых краевых
-   void Generate_Portrait(); // генерация портрета
+   void Input(); //СЃС‡РёС‚С‹РІР°РЅРёРµ РІСЃРµС… РЅРµРѕР±С…РѕРґРёРјС‹С… РґР°РЅРЅС‹С…
+   void Generate_Net(string net_file); //РіРµРЅРµСЂР°С†РёСЏ СЃРµС‚РєРё Рё РєРѕРЅРµС‡РЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ
+   void Read_Layers(string obj_file); //С„РѕСЂРјРёСЂСѓРµРј СЃР»РѕРёСЃС‚СѓСЋ СЃСЂРµРґСѓ
+   void Get_G(); //РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹ G
+   void Get_M();//РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅС‹С… РјР°С‚СЂРёС† M
+   void Get_b(double t); // РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕРіРѕ b
+   void Locals(int el_id, double t); // РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹ Рђ
+   void Assemble_Locals(int el_id); // РІРЅРµСЃРµРЅРёРµ Р»РѕРєР°Р»СЊРЅС‹С… РІ РіР»РѕР±Р°Р»СЊРЅСѓСЋ РЎР›РђРЈ
+   void Nonlinear(); //С†РёРєР» РїРѕ РІСЂРµРјРµРЅРё
+   void Get_KR1(double t); // СѓС‡РµС‚ РїРµСЂРІС‹С… РєСЂР°РµРІС‹С…
+   void Generate_Portrait(); // РіРµРЅРµСЂР°С†РёСЏ РїРѕСЂС‚СЂРµС‚Р°
    void multiply(vector<vector<double>>& A, vector<double>& x, vector<double>& res);
-   int  Get_Num_Layer(double x0, double y0, double x1, double y1); //определяем к какому слою относится элемент
-   void Get_KR2(); //учет вторых краевых
+   int  Get_Num_Layer(double x0, double y0, double x1, double y1); //РѕРїСЂРµРґРµР»СЏРµРј Рє РєР°РєРѕРјСѓ СЃР»РѕСЋ РѕС‚РЅРѕСЃРёС‚СЃСЏ СЌР»РµРјРµРЅС‚
+   void Get_KR2(); //СѓС‡РµС‚ РІС‚РѕСЂС‹С… РєСЂР°РµРІС‹С…
 
-   ///////////////////для решателя/////////////////////////
+   ///////////////////РґР»СЏ СЂРµС€Р°С‚РµР»СЏ/////////////////////////
    void LOS_LU(); 
    void FactLU(vector<double>& L, vector<double>& U, vector<double>& D);
    void Direct(vector<double>& L, vector<double>& D, vector<double>& y, vector<double>& b);
@@ -88,7 +88,7 @@ void KURS::Generate_Net(string net_file)
    for (int i = 0; i < nxw; i++)
       fin >> ax[i];
 
-   //обработка по х
+   //РѕР±СЂР°Р±РѕС‚РєР° РїРѕ С…
    for (int j = 0; j < nxw; j++)
       x_s.insert(ax[j]);
 
@@ -99,14 +99,14 @@ void KURS::Generate_Net(string net_file)
    for (int i = 0; i < nyw; i++)
       fin >> ay[i];
 
-   //обработка по y
+   //РѕР±СЂР°Р±РѕС‚РєР° РїРѕ y
    for (int j = 0; j < nyw; j++)
          y_s.insert(ay[j]);
 
    Kel = (nxw - 1) * (nyw - 1); //n
    N = nxw * nyw; //m
    nodes.resize(N);
-   // Получаем узлы
+   // РџРѕР»СѓС‡Р°РµРј СѓР·Р»С‹
    int k = 0;
    for (set<double>::iterator j = y_s.begin(); j != y_s.end(); j++)
       for (set<double>::iterator i = x_s.begin(); i != x_s.end(); i++)
@@ -119,7 +119,7 @@ void KURS::Generate_Net(string net_file)
 
       }
 
-   // Получаем КЭ
+   // РџРѕР»СѓС‡Р°РµРј РљР­
    int ku = 0;
    elems.resize(Kel);
    for (int i = 0; i < Kel; i++)
@@ -167,13 +167,13 @@ void KURS::Read_Layers(string obj_file)
    }
 }
 
-double KURS::gamma(double r) // значение гамма всегда равно 1/r^2
+double KURS::gamma(double r) // Р·РЅР°С‡РµРЅРёРµ РіР°РјРјР° РІСЃРµРіРґР° СЂР°РІРЅРѕ 1/r^2
 {
  //  return 1.0;
    return 1.0 / r / r;
 }
 
-double KURS::f(double r, double z, double t) // значение f по индексу f_id 
+double KURS::f(double r, double z, double t) // Р·РЅР°С‡РµРЅРёРµ f РїРѕ РёРЅРґРµРєСЃСѓ f_id 
 {
     //  return (1-lambda)/r;
    //   return 10*t;
@@ -184,7 +184,7 @@ double KURS::f(double r, double z, double t) // значение f по индексу f_id
     //  return t * gamma(r) + 1;
 }
 
-double  KURS::f_KR1(double r, double z, int s1_id, double t) // значение краевого S1 по индексу f_id
+double  KURS::f_KR1(double r, double z, int s1_id, double t) // Р·РЅР°С‡РµРЅРёРµ РєСЂР°РµРІРѕРіРѕ S1 РїРѕ РёРЅРґРµРєСЃСѓ f_id
 {
    switch (s1_id)
    {
@@ -194,12 +194,12 @@ double  KURS::f_KR1(double r, double z, int s1_id, double t) // значение краевог
      // return 100;
       //return r * r + z * z;
    default:
-      cout << "can't find s1 № " << s1_id << "\n";
+      cout << "can't find s1 в„– " << s1_id << "\n";
       break;
    }
 }
 
-double KURS::f_KR2(double r, double z) // значение краевого S1 по индексу f_id
+double KURS::f_KR2(double r, double z) // Р·РЅР°С‡РµРЅРёРµ РєСЂР°РµРІРѕРіРѕ S1 РїРѕ РёРЅРґРµРєСЃСѓ f_id
 {
         //  return t + r;
         return  0.;
@@ -207,7 +207,7 @@ double KURS::f_KR2(double r, double z) // значение краевого S1 по индексу f_id
          //return r * r + z * z;
 }
 
-//Функция, которая является решением уравнения
+//Р¤СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂР°СЏ СЏРІР»СЏРµС‚СЃСЏ СЂРµС€РµРЅРёРµРј СѓСЂР°РІРЅРµРЅРёСЏ
 double KURS::u(double r, double z, double t)
 {
   // return  t + r; 
@@ -216,7 +216,7 @@ double KURS::u(double r, double z, double t)
    //return x*x;
 }
 
-void KURS::Input() // чтение данных
+void KURS::Input() // С‡С‚РµРЅРёРµ РґР°РЅРЅС‹С…
 {
    ifstream in;
 
@@ -264,13 +264,13 @@ void KURS::Input() // чтение данных
    in.close();
 
    in.open("time.txt");
-   in >> time_number; //считываем количество временных слоев
+   in >> time_number; //СЃС‡РёС‚С‹РІР°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РІСЂРµРјРµРЅРЅС‹С… СЃР»РѕРµРІ
    time.resize(time_number);
-   for (int i = 0; i < time_number; i++) //считываем временные слои
+   for (int i = 0; i < time_number; i++) //СЃС‡РёС‚С‹РІР°РµРј РІСЂРµРјРµРЅРЅС‹Рµ СЃР»РѕРё
       in >> time[i];
 }
 
-void KURS::Get_G() // получение локальной G
+void KURS::Get_G() // РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕР№ G
 {
    double a1 = (lambda * hz * rp) / (6 * hr),
       a2 = (lambda * hz) / (12),
@@ -297,7 +297,7 @@ void KURS::Get_G() // получение локальной G
    G_loc[3][3] = 2 * a1 + 2 * a2 + 2 * a3 + 3 * a4;
 }
 
-void KURS::Get_M() // прибавление локальной М
+void KURS::Get_M() // РїСЂРёР±Р°РІР»РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕР№ Рњ
 {
    double g1 = gamma(rp), g2 = gamma(rp + hr);
    M_loc_g[0][0] = M_loc_g[2][2] = hr * hz / 4 *(
@@ -332,7 +332,7 @@ void KURS::Get_M() // прибавление локальной М
    M_loc[1][3] = M_loc[3][1] = hr * hz / 12 * (2*rp / 3 + hr / 2);
 }
 
-void KURS::Get_b(double t) // получение локального b
+void KURS::Get_b(double t) // РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕРіРѕ b
 {
    double f1 = f(rp, zs, t),
       f2 = f(rp + hr, zs, t),
@@ -360,7 +360,7 @@ void KURS::Get_b(double t) // получение локального b
       f4 * (hr * hz / 3 * (rp / 3 + hr / 4));
 }
 
-void KURS::Locals(int el_id, double t) // получение локальной матрицы А
+void KURS::Locals(int el_id, double t) // РїРѕР»СѓС‡РµРЅРёРµ Р»РѕРєР°Р»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹ Рђ
 {
    element el = elems[el_id];
    hr = nodes[el.num[1]].r - nodes[el.num[0]].r;
@@ -371,13 +371,13 @@ void KURS::Locals(int el_id, double t) // получение локальной матрицы А
    Get_G(); 
    Get_M();
    Get_b(t);
-   for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-       //  A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0;
-         A_loc[i][j] = G_loc[i][j] + M_loc[i][j]*nu0 + M_loc_g[i][j];
+   //for (int i = 0; i < 4; i++)
+   //   for (int j = 0; j < 4; j++)
+   //    //  A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0;
+   //      A_loc[i][j] = G_loc[i][j] + M_loc[i][j]*nu0 + M_loc_g[i][j];
 }
 
-void KURS::Generate_Portrait() // генерация портрета
+void KURS::Generate_Portrait() // РіРµРЅРµСЂР°С†РёСЏ РїРѕСЂС‚СЂРµС‚Р°
 {
    ia.resize(N + 1);
    ja.resize(16 * Kel);
@@ -387,10 +387,10 @@ void KURS::Generate_Portrait() // генерация портрета
       beg[i] = 0;
    for (int el = 0; el < Kel; el++)
    {
-      for (int i = 0; i < 4; i++) // NumberOfUnknowns(ielem)?
+      for (int i = 0; i < 4; i++) 
       {
          int k = elems[el].num[i];
-         for (int j = i + 1; j < 4; j++)// NumberOfUnknowns(ielem)?
+         for (int j = i + 1; j < 4; j++)
          {
             int ind1 = k;
             int ind2 = elems[el].num[j];
@@ -445,10 +445,10 @@ void KURS::Generate_Portrait() // генерация портрета
    }
 }
 
-void KURS::Assemble_Locals(int el_id) // внесение локальных A, b  в глобальную СЛАУ
+void KURS::Assemble_Locals(int el_id) // РІРЅРµСЃРµРЅРёРµ Р»РѕРєР°Р»СЊРЅС‹С… A, b  РІ РіР»РѕР±Р°Р»СЊРЅСѓСЋ РЎР›РђРЈ
 {
    vector<int> L = elems[el_id].num;
-   int k = elems[el_id].num.size(); // размерность локальной матрицы
+   int k = elems[el_id].num.size(); // СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ Р»РѕРєР°Р»СЊРЅРѕР№ РјР°С‚СЂРёС†С‹
    for (int i = 0; i < k; i++)
       di[L[i]] += A_loc[i][i];
 
@@ -464,8 +464,8 @@ void KURS::Assemble_Locals(int el_id) // внесение локальных A, b  в глобальную С
             }
 }
 
-// Умножение матрицы A на вектор x
-// Результат в res
+// РЈРјРЅРѕР¶РµРЅРёРµ РјР°С‚СЂРёС†С‹ A РЅР° РІРµРєС‚РѕСЂ x
+// Р РµР·СѓР»СЊС‚Р°С‚ РІ res
 void KURS :: multiply(vector<vector<double>>& A, vector<double>& x, vector<double>& res)
 {
    for (int i = 0; i < 4; i++)
@@ -482,8 +482,124 @@ void KURS::Nonlinear()
    x1.resize(N);
    x2.resize(N);
    temp.resize(N);
-   //Инициализация решения на 0-м, 1-м слоях
-   for (int i = 0; i < N; i++)
+
+   //РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЂРµС€РµРЅРёСЏ РЅР° 0-Рј СЃР»РѕРµ РєР°Рє СЂРµС€РµРЅРёРµ СЃС‚Р°С†РёРѕРЅР°СЂРЅРѕР№ Р·Р°РґР°С‡Рё
+   au.clear();
+   au.resize(ia[N]);
+   al.clear();
+   al.resize(ia[N]);
+   di.clear();
+   di.resize(N);
+   b.clear();
+   b.resize(N);
+   ja.resize(ia[N]);
+   G_loc.resize(4);
+   M_loc.resize(4);
+   A_loc.resize(4);
+   b_loc.resize(4);
+   M_loc_g.resize(4);
+   for (int i = 0; i < 4; i++)
+   {
+       A_loc[i].resize(4);
+       M_loc[i].resize(4);
+       M_loc_g[i].resize(4);
+       G_loc[i].resize(4);
+   }
+   for (int i = 0; i < Kel; i++)
+   {
+       Locals(i, time[0]);
+       for (int i = 0; i < 4; i++)
+           for (int j = 0; j < 4; j++)
+               A_loc[i][j] = G_loc[i][j] + M_loc_g[i][j];
+       Assemble_Locals(i); //СЃР±РѕСЂРєР° Р»РµРІРѕР№ С‡Р°СЃС‚Рё
+       //СЃР±РѕСЂРєР° РІРµРєС‚РѕСЂР° РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
+       for (int j = 0; j < 4; j++)
+           b[elems[i].num[j]] += b_loc[j];
+   }
+   b[istoc] = b[istoc] + 10e10 / 2 / 3.14 / nodes[istoc].r; //Р·Р°РґР°РµРј С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РІ СѓР·Р»Рµ СЃРµС‚РєРё
+   Get_KR2();
+   Get_KR1(time[0]);
+   LOS_LU();
+   ofstream out("result.txt");
+   out << "t = " << time[0] << endl;
+   out << "РџРѕР»СѓС‡РµРЅРЅРѕРµ СЂРµС€РµРЅРёРµ:" << endl;
+   for (int j = N - 1; j >= 0; j--)
+   {
+       out << x0[j] << "\t";
+       if (j % 21 == 0 && j != (N - 1))
+           out << endl;
+   }
+   out << endl;
+   for (int i = 0; i < N; i++) //Р·Р°РїРѕРјРёРЅР°РµРј РЅРѕРІС‹Рµ СЃС‚Р°СЂС‹Рµ РІРµРєС‚РѕСЂР°
+   {
+       x2[i] = x0[i];
+       x0[i] = 0.;
+   }
+   //////////////////////////////////////////////////////////////////
+
+   //РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЂРµС€РµРЅРёСЏ РЅР° 1-Рј СЃР»РѕРµ
+   au.clear();
+   au.resize(ia[N]);
+   al.clear();
+   al.resize(ia[N]);
+   di.clear();
+   di.resize(N);
+   b.clear();
+   b.resize(N);
+   ja.resize(ia[N]);
+   G_loc.resize(4);
+   M_loc.resize(4);
+   A_loc.resize(4);
+   b_loc.resize(4);
+   M_loc_g.resize(4);
+   for (int i = 0; i < 4; i++)
+   {
+       A_loc[i].resize(4);
+       M_loc[i].resize(4);
+       M_loc_g[i].resize(4);
+       G_loc[i].resize(4);
+   }
+   M2.resize(N);
+   //СЃС‡РёС‚Р°РµРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РїРѕ РІСЂРµРјРµРЅРё РґР»СЏ РґРІСѓС…СЃР»РѕР№РЅРѕР№ РЅРµСЏРІРЅРѕР№ СЃС…РµРјС‹
+   t0 = time[1] - time[0]; //t0
+   nu0 = 1 / t0;
+   for (int i = 0; i < Kel; i++)
+   {
+       Locals(i, time[1]);
+       for (int i = 0; i < 4; i++)
+           for (int j = 0; j < 4; j++)
+               A_loc[i][j] = G_loc[i][j] +M_loc[i][j] * nu0 + M_loc_g[i][j];
+       Assemble_Locals(i); //СЃР±РѕСЂРєР° Р»РµРІРѕР№ С‡Р°СЃС‚Рё
+       //СЃР±РѕСЂРєР° РІРµРєС‚РѕСЂР° РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
+       for (int j = 0; j < 4; j++)
+           temp[j] = x2[elems[i].num[j]];
+       multiply(M_loc, temp, M2);//M*x2
+       for (int j = 0; j < 4; j++)
+           M2[j] = M2[j] * nu0;
+       for (int j = 0; j < 4; j++)
+           b[elems[i].num[j]] += b_loc[j] + M2[j];
+   }
+//   b[istoc] = b[istoc] + 10e10 / 2 / 3.14 / nodes[istoc].r; //РЅРµ Р·Р°РґР°РµРј С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РІ СѓР·Р»Рµ СЃРµС‚РєРё
+   Get_KR2();
+   Get_KR1(time[1]);
+   LOS_LU();
+   out << "t = " << time[1] << endl;
+   out << "РџРѕР»СѓС‡РµРЅРЅРѕРµ СЂРµС€РµРЅРёРµ:" << endl;
+   for (int j = N - 1; j >= 0; j--)
+   {
+       out << x0[j] << "\t";
+       if (j % 21 == 0 && j != (N - 1))
+           out << endl;
+   }
+   out << endl;
+   for (int i = 0; i < N; i++) //Р·Р°РїРѕРјРёРЅР°РµРј РЅРѕРІС‹Рµ СЃС‚Р°СЂС‹Рµ РІРµРєС‚РѕСЂР°
+   {
+       x1[i] = x0[i];
+       x0[i] = 0.;
+   }
+   //////////////////////////////////////////////////////////////////////////////////////////////
+
+  /* for (int i = 0; i < N; i++)
    {
       if (i == istoc)
       {
@@ -495,13 +611,13 @@ void KURS::Nonlinear()
          x2[i] = u(nodes[i].r, nodes[i].z, time[0]);
          x1[i] = u(nodes[i].r, nodes[i].z, time[1]);
       }
-   }
+   }*/
    M1.resize(N);
    M2.resize(N);
-   ofstream out("result.txt");
-   for (int t = 2; t < time_number; t++)	//цикл по временным слоям
+ //  ofstream out("result.txt");
+   for (int t = 2; t < time_number; t++)	//С†РёРєР» РїРѕ РІСЂРµРјРµРЅРЅС‹Рј СЃР»РѕСЏРј, РЅР°С‡РёРЅР°СЏ СЃ 3-РіРѕ
    {
-      //очищаем вектора для каждого временного слоя
+      //РѕС‡РёС‰Р°РµРј РІРµРєС‚РѕСЂР° РґР»СЏ РєР°Р¶РґРѕРіРѕ РІСЂРµРјРµРЅРЅРѕРіРѕ СЃР»РѕСЏ
       au.clear();
       au.resize(ia[N]);
       al.clear();
@@ -523,7 +639,7 @@ void KURS::Nonlinear()
          M_loc_g[i].resize(4);
          G_loc[i].resize(4);
       }
-      //считаем коэффициенты по времени
+      //СЃС‡РёС‚Р°РµРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РїРѕ РІСЂРµРјРµРЅРё
       t0 = time[t] - time[t - 1]; //t0
       t1 = time[t] - time[t - 2]; //t
       t2 = time[t - 1] - time[t - 2]; //t1
@@ -533,8 +649,11 @@ void KURS::Nonlinear()
       for (int i = 0; i < Kel; i++)
       {
          Locals(i, time[t]);
-         Assemble_Locals(i); //сборка левой части
-         //сборка вектора правой части
+         for (int i = 0; i < 4; i++)
+             for (int j = 0; j < 4; j++)
+                 A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0 + M_loc_g[i][j];
+         Assemble_Locals(i); //СЃР±РѕСЂРєР° Р»РµРІРѕР№ С‡Р°СЃС‚Рё
+         //СЃР±РѕСЂРєР° РІРµРєС‚РѕСЂР° РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
          //F = b_loc(j)-nu2*M*x2+nu1*M*x1
          for (int j = 0; j < 4; j++)
             temp[j] = x2[elems[i].num[j]];
@@ -550,12 +669,12 @@ void KURS::Nonlinear()
          for (int j = 0; j < 4; j++)
             b[elems[i].num[j]] += b_loc[j] - M2[j] + M1[j];
       }
-      b[istoc] = b[istoc] + 10e10/2/3.14/nodes[istoc].r; //задаем точечный источник в узле сетки
+  //    b[istoc] = b[istoc] + 10e10/2/3.14/nodes[istoc].r; //Р·Р°РґР°РµРј С‚РѕС‡РµС‡РЅС‹Р№ РёСЃС‚РѕС‡РЅРёРє РІ СѓР·Р»Рµ СЃРµС‚РєРё
       Get_KR2();
       Get_KR1(time[t]);
       LOS_LU();
       out << "t = " << time[t] << endl;
-      //out << "Аналитическое решение:" << endl;
+      //out << "РђРЅР°Р»РёС‚РёС‡РµСЃРєРѕРµ СЂРµС€РµРЅРёРµ:" << endl;
       //for (int j = 0; j < N; j++)
       //   if (j == istoc)
       //      temp[j] = -10e6 / 2 / 3.14 / nodes[istoc].r/3*nodes[j].r*(2- nodes[j].r);
@@ -567,14 +686,14 @@ void KURS::Nonlinear()
       //   if (j % 10 == 0 && j!=(N-1))
       //      out << endl;
       //}
-  //    out << "Полученное решение:" << endl;
+  //    out << "РџРѕР»СѓС‡РµРЅРЅРѕРµ СЂРµС€РµРЅРёРµ:" << endl;
       for (int j = N - 1; j >= 0; j--)
       {
          out << x0[j] << "\t";
          if (j % 21 == 0 && j != (N - 1))
             out << endl;
       }
-     /* out << "Абсолютная погрешность:" << endl;
+     /* out << "РђР±СЃРѕР»СЋС‚РЅР°СЏ РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ:" << endl;
       for (int j = N - 1; j >= 0; j--)
       {
          out << temp[j] - x0[j] << "\t";
@@ -582,7 +701,7 @@ void KURS::Nonlinear()
             out << endl;
       }*/
       out << endl ;
-      for (int i = 0; i < N; i++) //запоминаем новые старые вектора
+      for (int i = 0; i < N; i++) //Р·Р°РїРѕРјРёРЅР°РµРј РЅРѕРІС‹Рµ СЃС‚Р°СЂС‹Рµ РІРµРєС‚РѕСЂР°
       {
          x2[i] = x1[i];
          x1[i] = x0[i];
@@ -591,7 +710,7 @@ void KURS::Nonlinear()
    }
 }
 
-void KURS::Get_KR1(double t) // учет первых краевых
+void KURS::Get_KR1(double t) // СѓС‡РµС‚ РїРµСЂРІС‹С… РєСЂР°РµРІС‹С…
 {
    for (int i = 0; i < KR1.size(); i++)
       for (int j = 0; j < KR1[i].size(); j++)
@@ -607,7 +726,7 @@ void KURS::Get_KR1(double t) // учет первых краевых
       }
 }
 
-void KURS::Get_KR2() // учет вторых краевых MS.b - вектор вклада от краевых
+void KURS::Get_KR2() // СѓС‡РµС‚ РІС‚РѕСЂС‹С… РєСЂР°РµРІС‹С… MS.b - РІРµРєС‚РѕСЂ РІРєР»Р°РґР° РѕС‚ РєСЂР°РµРІС‹С…
 {
     for (int i = 0; i < KR2_z.size(); i++)
         for (int j = 0; j < KR2_z[i].second.size() - 1; j++)
@@ -623,7 +742,7 @@ void KURS::Get_KR2() // учет вторых краевых MS.b - вектор вклада от краевых
         }
 }
 
-////////////////решатель///////////////////////////////////
+////////////////СЂРµС€Р°С‚РµР»СЊ///////////////////////////////////
 void KURS::ATx(vector<double>& x, vector<double>& y)
 {
    for (int i = 0; i < N; i++)
