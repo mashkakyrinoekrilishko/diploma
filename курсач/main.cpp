@@ -371,10 +371,10 @@ void KURS::Locals(int el_id, double t) // получение локальной матрицы ј
    Get_G(); 
    Get_M();
    Get_b(t);
-   for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 4; j++)
-       //  A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0;
-         A_loc[i][j] = G_loc[i][j] + M_loc[i][j]*nu0 + M_loc_g[i][j];
+   //for (int i = 0; i < 4; i++)
+   //   for (int j = 0; j < 4; j++)
+   //    //  A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0;
+   //      A_loc[i][j] = G_loc[i][j] + M_loc[i][j]*nu0 + M_loc_g[i][j];
 }
 
 void KURS::Generate_Portrait() // генераци€ портрета
@@ -387,10 +387,10 @@ void KURS::Generate_Portrait() // генераци€ портрета
       beg[i] = 0;
    for (int el = 0; el < Kel; el++)
    {
-      for (int i = 0; i < 4; i++) // NumberOfUnknowns(ielem)?
+      for (int i = 0; i < 4; i++) 
       {
          int k = elems[el].num[i];
-         for (int j = i + 1; j < 4; j++)// NumberOfUnknowns(ielem)?
+         for (int j = i + 1; j < 4; j++)
          {
             int ind1 = k;
             int ind2 = elems[el].num[j];
@@ -482,8 +482,124 @@ void KURS::Nonlinear()
    x1.resize(N);
    x2.resize(N);
    temp.resize(N);
-   //»нициализаци€ решени€ на 0-м, 1-м сло€х
-   for (int i = 0; i < N; i++)
+
+   //»нициализаци€ решени€ на 0-м слое как решение стационарной задачи
+   au.clear();
+   au.resize(ia[N]);
+   al.clear();
+   al.resize(ia[N]);
+   di.clear();
+   di.resize(N);
+   b.clear();
+   b.resize(N);
+   ja.resize(ia[N]);
+   G_loc.resize(4);
+   M_loc.resize(4);
+   A_loc.resize(4);
+   b_loc.resize(4);
+   M_loc_g.resize(4);
+   for (int i = 0; i < 4; i++)
+   {
+       A_loc[i].resize(4);
+       M_loc[i].resize(4);
+       M_loc_g[i].resize(4);
+       G_loc[i].resize(4);
+   }
+   for (int i = 0; i < Kel; i++)
+   {
+       Locals(i, time[0]);
+       for (int i = 0; i < 4; i++)
+           for (int j = 0; j < 4; j++)
+               A_loc[i][j] = G_loc[i][j] + M_loc_g[i][j];
+       Assemble_Locals(i); //сборка левой части
+       //сборка вектора правой части
+       for (int j = 0; j < 4; j++)
+           b[elems[i].num[j]] += b_loc[j];
+   }
+   b[istoc] = b[istoc] + 10e10 / 2 / 3.14 / nodes[istoc].r; //задаем точечный источник в узле сетки
+   Get_KR2();
+   Get_KR1(time[0]);
+   LOS_LU();
+   ofstream out("result.txt");
+   out << "t = " << time[0] << endl;
+   out << "ѕолученное решение:" << endl;
+   for (int j = N - 1; j >= 0; j--)
+   {
+       out << x0[j] << "\t";
+       if (j % 21 == 0 && j != (N - 1))
+           out << endl;
+   }
+   out << endl;
+   for (int i = 0; i < N; i++) //запоминаем новые старые вектора
+   {
+       x2[i] = x0[i];
+       x0[i] = 0.;
+   }
+   //////////////////////////////////////////////////////////////////
+
+   //»нициализаци€ решени€ на 1-м слое
+   au.clear();
+   au.resize(ia[N]);
+   al.clear();
+   al.resize(ia[N]);
+   di.clear();
+   di.resize(N);
+   b.clear();
+   b.resize(N);
+   ja.resize(ia[N]);
+   G_loc.resize(4);
+   M_loc.resize(4);
+   A_loc.resize(4);
+   b_loc.resize(4);
+   M_loc_g.resize(4);
+   for (int i = 0; i < 4; i++)
+   {
+       A_loc[i].resize(4);
+       M_loc[i].resize(4);
+       M_loc_g[i].resize(4);
+       G_loc[i].resize(4);
+   }
+   M2.resize(N);
+   //считаем коэффициенты по времени дл€ двухслойной не€вной схемы
+   t0 = time[1] - time[0]; //t0
+   nu0 = 1 / t0;
+   for (int i = 0; i < Kel; i++)
+   {
+       Locals(i, time[1]);
+       for (int i = 0; i < 4; i++)
+           for (int j = 0; j < 4; j++)
+               A_loc[i][j] = G_loc[i][j] +M_loc[i][j] * nu0 + M_loc_g[i][j];
+       Assemble_Locals(i); //сборка левой части
+       //сборка вектора правой части
+       for (int j = 0; j < 4; j++)
+           temp[j] = x2[elems[i].num[j]];
+       multiply(M_loc, temp, M2);//M*x2
+       for (int j = 0; j < 4; j++)
+           M2[j] = M2[j] * nu0;
+       for (int j = 0; j < 4; j++)
+           b[elems[i].num[j]] += b_loc[j] + M2[j];
+   }
+//   b[istoc] = b[istoc] + 10e10 / 2 / 3.14 / nodes[istoc].r; //не задаем точечный источник в узле сетки
+   Get_KR2();
+   Get_KR1(time[1]);
+   LOS_LU();
+   out << "t = " << time[1] << endl;
+   out << "ѕолученное решение:" << endl;
+   for (int j = N - 1; j >= 0; j--)
+   {
+       out << x0[j] << "\t";
+       if (j % 21 == 0 && j != (N - 1))
+           out << endl;
+   }
+   out << endl;
+   for (int i = 0; i < N; i++) //запоминаем новые старые вектора
+   {
+       x1[i] = x0[i];
+       x0[i] = 0.;
+   }
+   //////////////////////////////////////////////////////////////////////////////////////////////
+
+  /* for (int i = 0; i < N; i++)
    {
       if (i == istoc)
       {
@@ -495,11 +611,11 @@ void KURS::Nonlinear()
          x2[i] = u(nodes[i].r, nodes[i].z, time[0]);
          x1[i] = u(nodes[i].r, nodes[i].z, time[1]);
       }
-   }
+   }*/
    M1.resize(N);
    M2.resize(N);
-   ofstream out("result.txt");
-   for (int t = 2; t < time_number; t++)	//цикл по временным сло€м
+ //  ofstream out("result.txt");
+   for (int t = 2; t < time_number; t++)	//цикл по временным сло€м, начина€ с 3-го
    {
       //очищаем вектора дл€ каждого временного сло€
       au.clear();
@@ -533,6 +649,9 @@ void KURS::Nonlinear()
       for (int i = 0; i < Kel; i++)
       {
          Locals(i, time[t]);
+         for (int i = 0; i < 4; i++)
+             for (int j = 0; j < 4; j++)
+                 A_loc[i][j] = G_loc[i][j] + M_loc[i][j] * nu0 + M_loc_g[i][j];
          Assemble_Locals(i); //сборка левой части
          //сборка вектора правой части
          //F = b_loc(j)-nu2*M*x2+nu1*M*x1
@@ -550,7 +669,7 @@ void KURS::Nonlinear()
          for (int j = 0; j < 4; j++)
             b[elems[i].num[j]] += b_loc[j] - M2[j] + M1[j];
       }
-      b[istoc] = b[istoc] + 10e10/2/3.14/nodes[istoc].r; //задаем точечный источник в узле сетки
+  //    b[istoc] = b[istoc] + 10e10/2/3.14/nodes[istoc].r; //задаем точечный источник в узле сетки
       Get_KR2();
       Get_KR1(time[t]);
       LOS_LU();
